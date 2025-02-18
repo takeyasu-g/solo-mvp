@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "migrate": "./node_modules/.bin/knex migrate:latest",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,6 +13,7 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "firebase-admin": "^13.1.0",
     "knex": "^3.1.0",
     "pg": "^8.13.3"
   },
