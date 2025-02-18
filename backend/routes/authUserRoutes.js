@@ -6,10 +6,10 @@ const router = express.Router();
 // sign up route
 router.post('/signup', async (req, res) => {
   //get email and password inputs from req.body
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
 
   // check if email and password are in the request before calling
-  if (!email || !password) {
+  if (!email || !password || !username) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
@@ -21,6 +21,12 @@ router.post('/signup', async (req, res) => {
   }
 
   try {
+    // Check if username is already taken in database
+    const existingUser = await knex('users').where({ username }).first();
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username is already taken.' });
+    }
+
     // creates user in firebase, using only email and password (from request body)
     const userRecord = await admin.auth().createUser({
       email,
@@ -31,6 +37,7 @@ router.post('/signup', async (req, res) => {
     await knex('users').insert({
       firebase_uid: userRecord.uid,
       email: userRecord.email,
+      username,
     });
 
     res.status(201).json({
@@ -48,19 +55,48 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Check if user email exists, but not checking password ( not sure if I need this)
-//does not login the user, just gives back user
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+// middleware to verify token fron firebase
+const verifyToken = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]; // extract just the token Id
+
+  // if no token is provided
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization token required' });
+  }
 
   try {
-    const user = await admin.auth().getUserByEmail(email);
-    res.status(200).json({
-      message: 'User found',
-      user: user,
-    });
+    // verify token in firebase
+    const decodedToken = await admin.auth().verifyIdToken(token);
+
+    // attach decoded user information to the request.user (so next route can use it)
+    req.user = decodedToken;
+
+    next(); // call next route (which should be profile)
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    // If token verification fails
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
+
+// GET profile of user (from tokenId firebase Uid)
+router.get('/profile', verifyToken, async (req, res) => {
+  const { user } = req; // Get user information from verifyToken middleware
+
+  // Now, fetch the user from the database using the firebase_uid
+  try {
+    const dbUser = await knex('users')
+      .where({ firebase_uid: user.uid })
+      .first();
+
+    if (!dbUser) {
+      return res.status(404).json({ error: 'User not found in the database' });
+    }
+
+    // Return the user's profile data
+    // for now only return username
+    res.status(200).json({ username: dbUser.username });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

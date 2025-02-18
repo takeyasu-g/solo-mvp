@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "create-table": "./node_modules/.bin/knex migrate:make",
     "migrate": "./node_modules/.bin/knex migrate:latest",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
