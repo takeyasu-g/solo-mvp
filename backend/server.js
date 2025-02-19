@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const authUserRoutes = require('./routes/authUserRoutes'); // routes for authentication (sign in / sign up)
+const gameCouchRoutes = require('./routes/gameCouchRoutes'); // routes for gameCouch (event maker)
 
 const app = express();
 
@@ -10,8 +11,10 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 
 // use AuthUserRoutes
-// endpoints with /auth will go to authUserRoutes
 app.use('/auth', authUserRoutes);
+
+//use gameCouchRoutes
+app.use('/game-couch', gameCouchRoutes);
 
 // basic endpoint (test) => to be changed to static file
 app.get('/', (req, res) => {
