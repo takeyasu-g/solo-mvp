@@ -1,6 +1,6 @@
 const express = require('express');
 const knex = require('../knex');
-const { verifyToken } = require('../middleware/authMiddleware');
+const { verifyToken } = require('../utils/authMiddleware');
 const router = express.Router();
 
 // CREATE a Game Couch event

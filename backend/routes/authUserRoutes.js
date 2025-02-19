@@ -2,7 +2,7 @@ const express = require('express');
 const admin = require('../firebase');
 const knex = require('../knex');
 const router = express.Router();
-const { verifyToken } = require('../middleware/authMiddleware');
+const { verifyToken } = require('../utils/authMiddleware');
 
 // SIGN UP route
 router.post('/signup', async (req, res) => {

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const authUserRoutes = require('./routes/authUserRoutes'); // routes for authentication (sign in / sign up)
 const gameCouchRoutes = require('./routes/gameCouchRoutes'); // routes for gameCouch (event maker)
+const rawgRoutes = require('./routes/rawgApiRoutes'); // routes for RAWG API (fetch games)
 
 const app = express();
 
@@ -13,8 +14,11 @@ app.use(express.json());
 // use AuthUserRoutes
 app.use('/auth', authUserRoutes);
 
-//use gameCouchRoutes
+// use gameCouchRoutes
 app.use('/game-couch', gameCouchRoutes);
+
+// use rawgApiRoutes
+app.use('/api/rawg', rawgRoutes);
 
 // basic endpoint (test) => to be changed to static file
 app.get('/', (req, res) => {
