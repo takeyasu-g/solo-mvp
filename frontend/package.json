@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm install && npm install vite && vite build && cd ../backend && npm install && npm install -g knex",
+    "build": "npm install && npm install vite && vite build ",
     "lint": "eslint .",
     "preview": "vite preview"
   },
