@@ -58,3 +58,31 @@ export interface AuthResponse {
   token?: string;
   error?: string;
 }
+
+export interface GameCouchFormData {
+  gameName: string;
+  gameImage: string;
+  maxSeats: number;
+  eventTime: string;
+  location: string;
+  title: string;
+  description: string;
+}
+
+export interface GameSearchFilters {
+  new: boolean;
+  topRating: boolean;
+  maxPlayers: string;
+  genre: string;
+  platform: string;
+  keywords: string;
+}
+
+export interface Game {
+  id: number;
+  name: string;
+  cover: { image_id: string };
+  multiplayer_modes?: { onlinemax: number }[];
+  total_rating?: number;
+  genres?: { name: string }[];
+}

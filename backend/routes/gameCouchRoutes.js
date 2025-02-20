@@ -69,6 +69,7 @@ router.post('/create', verifyToken, async (req, res) => {
       description,
     });
   } catch (error) {
+    console.error('Error creating Game Couch event:', error.message); // Log error
     res.status(500).json({ error: error.message });
   }
 });

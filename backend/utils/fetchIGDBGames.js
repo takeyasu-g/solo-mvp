@@ -62,7 +62,7 @@ const fetchIGDBGames = async (filters = {}) => {
     }
 
     // limit (amount to query )and offset (start where in the query)
-    queryParts.push(` limit 10; offset ${filters.offset};`);
+    queryParts.push(` limit 12; offset ${filters.offset};`);
 
     const query = queryParts.join(' '); // Combines to IGDB query string
     console.log(query);

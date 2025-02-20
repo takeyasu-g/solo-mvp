@@ -59,6 +59,9 @@ router.post('/login', async (req, res) => {
     const userRecord = await admin.auth().getUserByEmail(email);
     const customToken = await admin.auth().createCustomToken(userRecord.uid);
 
+    // Set the token in the session
+    req.session.token = customToken;
+
     console.log('Login successful:', email); // Log successful login
     res.status(200).json({ customToken }); // Send custom token to frontend
   } catch (error) {

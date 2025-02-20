@@ -78,6 +78,9 @@ const Home: React.FC = () => {
       // Sign in with the custom token
       await signInWithCustomToken(auth, data.customToken);
 
+      // Set the token in cookies
+      document.cookie = `token=${data.customToken}; path=/`;
+
       console.log('Login successful:', email); // Log successful login
       // Redirect to /game-couch/create
       navigate('/game-couch/create');
