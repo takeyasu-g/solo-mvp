@@ -12,10 +12,10 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 
 // use AuthUserRoutes
-app.use('/auth', authUserRoutes);
+app.use('/api/auth', authUserRoutes);
 
 // use gameCouchRoutes
-app.use('/game-couch', gameCouchRoutes);
+app.use('/api/game-couch', gameCouchRoutes);
 
 // use IGDBApiRoutes
 app.use('/api/igdb', igdbRoutes);

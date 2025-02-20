@@ -14,7 +14,7 @@ exports.up = function (knex) {
     table.string('host_username').notNullable(); // Store host’s username instead of exposing ID
     table.string('game_name').notNullable();
     table.string('game_image'); // Store game image URL (not actual image)
-    table.integer('max_seats').notNullable();
+    table.integer('max_seats').notNullable(); // max playersg
     table.timestamp('event_time').notNullable();
     table.string('location'); // Online meeting place (Discord)
     table.string('title').notNullable();
