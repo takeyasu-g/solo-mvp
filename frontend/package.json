@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm install && vite build && cd ../backend && npm install && npm install -g knex && knex migrate:latest",
+    "build": "npm install && npm install vite && vite build && cd ../backend && npm install && npm install -g knex",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -30,6 +30,6 @@
     "prettier": "^3.5.1",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.22.0",
-    "vite": "^6.1.0"
+    "vite": "^6.1.1"
   }
 }
