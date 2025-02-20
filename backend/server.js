@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const authUserRoutes = require('./routes/authUserRoutes'); // routes for authentication (sign in / sign up)
 const gameCouchRoutes = require('./routes/gameCouchRoutes'); // routes for gameCouch (event maker)
-const rawgRoutes = require('./routes/rawgApiRoutes'); // routes for RAWG API (fetch games)
+const igdbRoutes = require('./routes/igdbRoutes'); // routes for IGDB API (fetch games)
 
 const app = express();
 
@@ -17,10 +17,11 @@ app.use('/auth', authUserRoutes);
 // use gameCouchRoutes
 app.use('/game-couch', gameCouchRoutes);
 
-// use rawgApiRoutes
-app.use('/api/rawg', rawgRoutes);
+// use IGDBApiRoutes
+app.use('/api/igdb', igdbRoutes);
 
 // basic endpoint (test) => to be changed to static file
+// should this be in front of other endpoints?
 app.get('/', (req, res) => {
   res.send('server is running');
 });
