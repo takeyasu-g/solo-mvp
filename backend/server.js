@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const authUserRoutes = require('./routes/authUserRoutes'); // routes for authentication (sign in / sign up)
 const gameCouchRoutes = require('./routes/gameCouchRoutes'); // routes for gameCouch (event maker)
 const igdbRoutes = require('./routes/igdbRoutes'); // routes for IGDB API (fetch games)
@@ -37,9 +38,12 @@ app.use('/api/game-couch', gameCouchRoutes);
 // use IGDBApiRoutes
 app.use('/api/igdb', igdbRoutes);
 
-// basic endpoint (test) => to be changed to static file
-app.get('/', (req, res) => {
-  res.send('server is running');
+// Serve static files from the frontend's dist directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Serve the index.html file for any unknown routes (for React Router)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
 //start server on PORT
