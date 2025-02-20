@@ -1,8 +1,8 @@
 const admin = require('../firebase');
 
-// middleware to verify token fron firebase
+// middleware to verify token from session
 const verifyToken = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // extract just the token Id
+  const token = req.session.token; // get token from session
 
   // if no token is provided
   if (!token) {
@@ -13,7 +13,7 @@ const verifyToken = async (req, res, next) => {
     // verify token in firebase
     const decodedToken = await admin.auth().verifyIdToken(token);
 
-    // attach decoded user information(like the UID) to the request.user (so next route can use it)
+    // attach decoded user information (like the UID) to the request.user (so next route can use it)
     req.user = decodedToken;
 
     next(); // call next route (which should be profile)

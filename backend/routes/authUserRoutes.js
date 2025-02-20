@@ -6,61 +6,71 @@ const { verifyToken } = require('../utils/authMiddleware');
 
 // SIGN UP route
 router.post('/signup', async (req, res) => {
-  //get email and password inputs from req.body
   const { email, password, username } = req.body;
 
-  // check if email and password are in the request before calling
   if (!email || !password || !username) {
-    return res.status(400).json({ error: 'Email and password are required' });
+    return res
+      .status(400)
+      .json({ error: 'Email, password, and username are required' });
   }
 
-  // Check if password is at least 6 characters long
   if (password.length < 6) {
-    return res.status(400).json({
-      error: 'Password must be at least 6 characters long.',
-    });
+    return res
+      .status(400)
+      .json({ error: 'Password must be at least 6 characters long.' });
   }
 
   try {
-    // Check if username is already taken in database
     const existingUser = await knex('users').where({ username }).first();
     if (existingUser) {
       return res.status(400).json({ error: 'Username is already taken.' });
     }
 
-    // creates user in firebase, using only email and password (from request body)
-    const userRecord = await admin.auth().createUser({
-      email,
-      password,
-    });
+    const userRecord = await admin.auth().createUser({ email, password });
 
-    // insert new user into database and not returning any information from database
     await knex('users').insert({
       firebase_uid: userRecord.uid,
       email: userRecord.email,
       username,
     });
 
-    res.status(201).json({
-      message: 'User created successfully',
-    });
+    res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
-    // if email aready exists ( check error code  from firebase)
     if (error.code === 'auth/email-already-exists') {
-      res.status(400).json({
-        error: 'Email is already in use.',
-      });
+      res.status(400).json({ error: 'Email is already in use.' });
     } else {
       res.status(500).json({ error: error.message });
     }
   }
 });
 
+// LOGIN route
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  try {
+    console.log('Attempting to log in:', email);
+
+    // Use Firebase Admin SDK to verify the user's credentials
+    const userRecord = await admin.auth().getUserByEmail(email);
+    const customToken = await admin.auth().createCustomToken(userRecord.uid);
+
+    console.log('Login successful:', email); // Log successful login
+    res.status(200).json({ customToken }); // Send custom token to frontend
+  } catch (error) {
+    console.error('Login failed:', error.message); // Log login failure
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // GET profile of user (from tokenId firebase Uid)
 router.get('/profile', verifyToken, async (req, res) => {
-  const { user } = req; // Get user information from verifyToken middleware
+  const { user } = req;
 
-  // Now, fetch the user from the database using the firebase_uid
   try {
     const dbUser = await knex('users')
       .where({ firebase_uid: user.uid })
@@ -70,8 +80,6 @@ router.get('/profile', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'User not found in the database' });
     }
 
-    // Return the user's profile data
-    // for now only return username
     res.status(200).json({ username: dbUser.username });
   } catch (error) {
     res.status(500).json({ error: error.message });
