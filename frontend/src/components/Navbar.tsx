@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
+import React from 'react';
 
-const Navbar = () => {
+interface NavbarProps {
+  // Define any props your Navbar component might need
+}
+
+const Navbar: React.FC<NavbarProps> = () => {
   return (
     <nav className="navbar">
       <Link to="/" className="nav-link">

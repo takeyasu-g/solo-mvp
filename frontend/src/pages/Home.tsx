@@ -1,10 +1,38 @@
 import { useState } from 'react';
+import { SignUpFormData, ApiResponse } from '../vite-env';
 
-const Home = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState(''); // Only for signup
-  const [isSignUp, setIsSignUp] = useState(false); // Toggle between login & signup
+const Home: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
+  const handleSignUp = async (): Promise<void> => {
+    setError('');
+
+    if (!email || !password || !username) {
+      setError('All fields are required.');
+      return;
+    }
+
+    const formData: SignUpFormData = { email, password, username };
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data: ApiResponse<null> = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Signup failed.');
+
+      alert('Signup successful!');
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
 
   return (
     <div className="home-container">
@@ -38,7 +66,11 @@ const Home = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button>{isSignUp ? 'Sign Up' : 'Log In'}</button>
+        {error && <p className="error-message">{error}</p>}
+
+        <button onClick={isSignUp ? handleSignUp : undefined}>
+          {isSignUp ? 'Sign Up' : 'Log In'}
+        </button>
 
         <p onClick={() => setIsSignUp(!isSignUp)}>
           {isSignUp

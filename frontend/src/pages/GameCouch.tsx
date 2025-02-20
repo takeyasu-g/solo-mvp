@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
+import React from 'react';
 
-const GameCouch = () => {
-  const { id } = useParams(); // Get event ID from URL
+const GameCouch: React.FC = () => {
+  const { id } = useParams<{ id: string }>(); // Get event ID from URL
 
   return <h1>Game Couch Event ID: {id}</h1>;
 };

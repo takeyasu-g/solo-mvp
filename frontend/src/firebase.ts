@@ -1,8 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getAuth, Auth } from 'firebase/auth';
 
-// Firebase configuration , REMEMBER TO PUT IN DEPLOY ENVIROMENT variables
-const firebaseConfig = {
+const firebaseConfig: Record<string, string> = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -11,8 +10,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const app: FirebaseApp = initializeApp(firebaseConfig);
+export const auth: Auth = getAuth(app);
 
-export { auth };
+export default app;

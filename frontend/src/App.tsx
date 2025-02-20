@@ -10,23 +10,20 @@ import CreateGameCouch from './pages/CreateGameCouch';
 import GameCouch from './pages/GameCouch';
 import MyGameCouches from './pages/MyGameCouches';
 
-// not sure if right way , but useLocation wouldn't work without having it wrapped
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <AppContent />
     </Router>
   );
-}
+};
 
-// Separate component inside Router so useLocation() works
-function AppContent() {
-  const location = useLocation(); // Get current page route
+const AppContent: React.FC = () => {
+  const location = useLocation();
 
   return (
     <>
-      {location.pathname !== '/' && <Navbar />}{' '}
-      {/* Now hides properly the Navbar on Home */}
+      {location.pathname !== '/' && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/game-couch/create" element={<CreateGameCouch />} />
@@ -35,6 +32,6 @@ function AppContent() {
       </Routes>
     </>
   );
-}
+};
 
 export default App;
